@@ -15,6 +15,7 @@ namespace WebAPI_SameNames.Controllers.External
         /// </summary>
         /// <param name="item">SaludoIn</param>
         /// <returns>SaludoOut</returns>
+        [HttpPost]
         [Route("ObtenerSaludo")]
         public SaludoOut ObtenerSaludo(SaludoIn item)
         {
