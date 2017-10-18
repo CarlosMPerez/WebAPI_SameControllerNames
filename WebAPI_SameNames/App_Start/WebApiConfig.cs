@@ -26,7 +26,7 @@ namespace WebAPI_SameNames
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-
+            
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "{namespace}/{controller}/{id}",
@@ -106,29 +106,64 @@ namespace WebAPI_SameNames
                 return default(T);
             }
 
+            private string GetControllerName(IHttpRouteData subRoute)
+            {
+                var dataTokenValue = subRoute.Route.DataTokens["actions"];
+
+                if (dataTokenValue == null)
+                    return null;
+
+                var controllerName = ((HttpActionDescriptor[])dataTokenValue).First().ControllerDescriptor.ControllerName.Replace("Controller", string.Empty);
+                return controllerName;
+            }
+
+            private string GetNamespaceName(IHttpRouteData subRoute)
+            {
+                var dataTokenValue = subRoute.Route.DataTokens["actions"];
+
+                if (dataTokenValue == null)
+                    return null;
+
+                var namespaceName = ((HttpActionDescriptor[])dataTokenValue).First().ControllerDescriptor.ControllerType.Namespace;
+                namespaceName = namespaceName.Substring(namespaceName.LastIndexOf('.') + 1);
+                return namespaceName;
+            }
+
             public HttpControllerDescriptor SelectController(HttpRequestMessage request)
             {
+                string namespaceName = "";
+                string controllerName = "";
+
                 IHttpRouteData routeData = request.GetRouteData();
+
                 if (routeData == null)
                 {
                     throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
 
+                var subRutas = routeData.GetSubRoutes();
                 // Get the namespace and controller variables from the route data.
-                string namespaceName = GetRouteVariable<string>(routeData, NamespaceKey);
-                if (namespaceName == null)
+                // or the subroutes
+                if (subRutas != null)
                 {
-                    throw new HttpResponseException(HttpStatusCode.NotFound);
+                    namespaceName = GetNamespaceName(subRutas.FirstOrDefault());
+                    controllerName = GetControllerName(subRutas.FirstOrDefault());
                 }
-
-                string controllerName = GetRouteVariable<string>(routeData, ControllerKey);
-                if (controllerName == null)
+                else
+                {
+                    namespaceName = GetRouteVariable<string>(routeData, NamespaceKey);
+                    controllerName = GetRouteVariable<string>(routeData, ControllerKey);
+                }
+                
+                
+                if (namespaceName == null || controllerName == null)
                 {
                     throw new HttpResponseException(HttpStatusCode.NotFound);
                 }
 
                 // Find a matching controller.
-                string key = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", namespaceName, controllerName);
+                string key = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", 
+                    namespaceName.Trim(), controllerName.Trim());
 
                 HttpControllerDescriptor controllerDescriptor;
                 if (_controllers.Value.TryGetValue(key, out controllerDescriptor))

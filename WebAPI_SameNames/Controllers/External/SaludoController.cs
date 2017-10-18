@@ -7,7 +7,7 @@ namespace WebAPI_SameNames.Controllers.External
     /// <summary>
     /// Saludo Controller EXTERNO
     /// </summary>
-    [RoutePrefix("External/Saludo")]
+    //[RoutePrefix("External/Saludo")]
     public class SaludoController : ApiController
     {
         /// <summary>
@@ -16,7 +16,7 @@ namespace WebAPI_SameNames.Controllers.External
         /// <param name="item">SaludoIn</param>
         /// <returns>SaludoOut</returns>
         [HttpPost]
-        [Route("ObtenerSaludo")]
+        //[Route("ObtenerSaludo")]
         public SaludoOut ObtenerSaludo(SaludoIn item)
         {
             var response = new SaludoOut();

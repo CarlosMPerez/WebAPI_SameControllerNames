@@ -12,11 +12,11 @@ function llamadaAPIExterna() {
     });
 
     llamada.done(function (data) {
-        $('#lblResultadoExterno').val(data.TextoSaludo);
+        $('#lblResultadoExterno').text(data.TextoSaludo);
     });
 
     llamada.fail(function (xhr, status, error) {
-        alert(xhr);
+        alert(xhr.status + "\n" + xhr.statusText);
     });
 }
 
@@ -31,10 +31,10 @@ function llamadaAPIInterna() {
     });
 
     llamada.done(function (data) {
-        $('#lblResultadoInterno').val(data.TextoSaludo);
+        $('#lblResultadoInterno').text(data.TextoSaludo);
     });
 
     llamada.fail(function (xhr, status, error) {
-        alert(xhr);
+        alert(xhr.status + "\n" + xhr.statusText);
     });
 }

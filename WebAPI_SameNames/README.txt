@@ -56,3 +56,6 @@ Salida, Documentación XML
 13a) La documentación online funciona. Vamos a probar que los controllers funcionan llamando 
 a las APIs mediante js.
 14) Añadido /Scripts/app/home.js para hacer llamadas a APIs.
+
+Terminado! Como prueba de concepto, uno de los controladores usa atributos RoutePrefix y 
+Route y el otro no. Ambos funcionan, pero he tenido que modificar NamespaceHttpControllerSelector.
